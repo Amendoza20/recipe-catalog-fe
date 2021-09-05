@@ -1,8 +1,8 @@
 import { Component } from "react";
 
-const Button = ({label}) => {
+const Button = ({label, onSelection}) => {
     return(
-        <div>{label}</div>
+        <button onClick={() => onSelection(label)} type="button">{label}</button>
     )
 } 
 class Buttons extends Component{
@@ -11,14 +11,12 @@ class Buttons extends Component{
     }
 
     render(){
+        const { categories, onSelection } = this.props;
         return(
             <div>
-               <Button label="Chicken" />
-               <Button label="Beef" />
-               <Button label="Pork" />
-               <Button label="Vegetarian" />
-               <Button label="Vegan" />
-               <Button label="Fish" />
+                {categories.map(category =>
+                    <Button label={category} onSelection={onSelection} />    
+                )}
             </div>
         )
     }
