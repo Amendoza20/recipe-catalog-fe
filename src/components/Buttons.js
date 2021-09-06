@@ -14,8 +14,8 @@ class Buttons extends Component{
         const { categories, onSelection } = this.props;
         return(
             <div>
-                {categories.map(category =>
-                    <Button label={category} onSelection={onSelection} />    
+                {categories.map((category, key) =>
+                    <Button key={key} label={category} onSelection={onSelection} />    
                 )}
             </div>
         )
