@@ -1,8 +1,13 @@
 import { Component } from "react";
 import Buttons from './Buttons';
 import CalendarDay from './CalendarDay';
+import axios from 'axios';
 
-
+const recipeMock = {
+    id: 0, 
+    recipeTitle: "",
+    recipeType: ""
+}
 class Home extends Component{
     constructor(props){
         super(props)
@@ -10,16 +15,19 @@ class Home extends Component{
             categories: [],
             selections: [],
             days: [
-                {day: "Monday", recipe: {}},
-                {day: "Tuesday", recipe: {}},
-                {day: "Wednesday", recipe: {}},
-                {day: "Thursday", recipe: {}},
-                {day: "Friday", recipe:{}},
-                {day: "Saturday", recipe:{}},
-                {day: "Sunday", recipe: {}}]
+                {day: "Monday", recipe: recipeMock},
+                {day: "Tuesday", recipe: recipeMock},
+                {day: "Wednesday", recipe: recipeMock},
+                {day: "Thursday", recipe: recipeMock},
+                {day: "Friday", recipe: recipeMock},
+                {day: "Saturday", recipe: recipeMock},
+                {day: "Sunday", recipe: recipeMock}
+            ]
         };
         this.onSelection = this.onSelection.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.setCategories = this.setCategories.bind(this);
+
     }
 
     onSelection(value){
@@ -31,10 +39,29 @@ class Home extends Component{
        
     }
 
-    
+    onSubmit(){
+        axios.post("http://localhost:8080/menu/recipetypes", {
+            recipeTypes: this.state.selections
+        })
+        .then(result => {
+            this.formatDays(result.data.recipes)
+        })
+        .catch(error => console.log(error));
+    }
+
+    formatDays(recipes){
+        const { days } = this.state;
+        
+        for(let i = 0; i < days.length && i < recipes.length; i++){
+            days[i].recipe = recipes[i];    
+        }
+        this.setState({
+            days 
+        });
+    }
+
     setCategories(categories){
         this.setState({categories});
-        console.log(this.state.categories)
     }
 
     componentDidMount(){
@@ -59,6 +86,9 @@ class Home extends Component{
                     )}
                     <Buttons categories={categories} onSelection={this.onSelection} />
                 </div>
+                {selections.length >= 7 && 
+                    <button onClick={this.onSubmit} >Submit</button>
+                }
             </div>
         )
     }

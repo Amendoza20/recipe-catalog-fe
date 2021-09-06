@@ -8,7 +8,10 @@ class CalendarDay extends Component{
     render(){
         const { day, recipe } = this.props;
         return(
-            <div>{day}</div>
+            <div>
+                <div>{day}</div>
+                <div>{recipe.recipeTitle}</div>
+            </div>
         )
     }
 
